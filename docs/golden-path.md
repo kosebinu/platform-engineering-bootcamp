@@ -25,4 +25,4 @@ Step 8:
 Grafana dashboard automatically available
 
 Step 9:
-Alerts automatically configured
+Alerts automatically configured.
