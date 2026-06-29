@@ -4,16 +4,20 @@ kind: Service
 metadata:
   name: {{ .Values.application.name }}
 
+  labels:
+    app.kubernetes.io/name: {{ .Values.application.name }}
+    app.kubernetes.io/managed-by: Helm
+    company.io/team: {{ .Values.application.team }}
+    company.io/environment: {{ .Values.application.environment }}
+
 spec:
   type: ClusterIP
 
   selector:
-    app: {{ .Values.application.name }}
+    app.kubernetes.io/name: {{ .Values.application.name }}
 
   ports:
-
-    - port: {{ .Values.service.port }}
-
+    - name: http
+      port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.port }}
-
       protocol: TCP

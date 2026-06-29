@@ -9,13 +9,19 @@ spec:
 
   selector:
     matchLabels:
-      app: {{ .Values.application.name }}
+      app.kubernetes.io/name: {{ .Values.application.name }}
+      app.kubernetes.io/managed-by: Helm
+      company.io/team: {{ .Values.application.team }}
+      company.io/environment: {{ .Values.application.environment }}
 
   template:
 
     metadata:
       labels:
-        app: {{ .Values.application.name }}
+        app.kubernetes.io/name: {{ .Values.application.name }}
+        app.kubernetes.io/managed-by: Helm
+        company.io/team: {{ .Values.application.team }}
+        company.io/environment: {{ .Values.application.environment }}
 
     spec:
 
