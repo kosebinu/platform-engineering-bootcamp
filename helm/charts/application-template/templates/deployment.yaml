@@ -35,3 +35,19 @@ spec:
                 name: {{ .Values.application.name }}-config
             - secretRef:
                 name: {{ .Values.application.name }}-secret
+
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.health.path }}
+              port: {{ .Values.health.port }}
+
+            initialDelaySeconds: 30
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.health.path }}
+              port: {{ .Values.health.port }}
+
+            initialDelaySeconds: 5
+            periodSeconds: 5
