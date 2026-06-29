@@ -12,6 +12,8 @@ metadata:
 spec:
   replicas: {{ .Values.replicaCount }}
 
+  serviceAccountName: {{ default .Values.application.name .Values.serviceAccount.name }}
+
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ .Values.application.name }}
