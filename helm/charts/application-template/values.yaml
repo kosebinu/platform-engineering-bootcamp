@@ -69,3 +69,13 @@ resources:
 serviceAccount:
   create: true
   name: ""
+
+# -----------------------------------------------------------------------------
+# Ingress
+# -----------------------------------------------------------------------------
+
+ingress:
+  enabled: false
+  host: ""
+  path: /
+  className: nginx
