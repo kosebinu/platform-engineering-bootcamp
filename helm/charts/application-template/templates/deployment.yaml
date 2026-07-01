@@ -10,7 +10,9 @@ metadata:
     company.io/environment: {{ .Values.application.environment }}
 
 spec:
+  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
 
   serviceAccountName: {{ default .Values.application.name .Values.serviceAccount.name }}
 
