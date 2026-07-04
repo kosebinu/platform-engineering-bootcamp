@@ -1,0 +1,55 @@
+apiVersion: argoproj.io/v1alpha1
+
+kind: ApplicationSet
+
+metadata:
+  name: platform-applications
+
+spec:
+
+  generators:
+
+    - list:
+
+        elements:
+
+          - name: payment
+            namespace: payment
+
+          - name: inventory
+            namespace: inventory
+
+          - name: orders
+            namespace: orders
+
+  template:
+
+    metadata:
+
+      name: "{{name}}"
+
+    spec:
+
+      project: default
+
+      source:
+
+        repoURL: https://github.com/YOUR_USERNAME/platform-engineering-bootcamp.git
+
+        targetRevision: main
+
+        path: helm/charts/application-template
+
+      destination:
+
+        server: https://kubernetes.default.svc
+
+        namespace: "{{namespace}}"
+
+      syncPolicy:
+
+        automated:
+
+          prune: true
+
+          selfHeal: true
