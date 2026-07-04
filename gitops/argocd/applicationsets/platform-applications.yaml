@@ -1,5 +1,4 @@
 apiVersion: argoproj.io/v1alpha1
-
 kind: ApplicationSet
 
 metadata:
@@ -9,47 +8,35 @@ spec:
 
   generators:
 
-    - list:
+    - git:
 
-        elements:
-
-          - name: payment
-            namespace: payment
-
-          - name: inventory
-            namespace: inventory
-
-          - name: orders
-            namespace: orders
+        repoURL: https://github.com/kosebinu/platform-engineering-bootcamp.git
+        revision: main
+        directories:
+          - path: gitops/applications/*
 
   template:
 
     metadata:
-
-      name: "{{name}}"
+      name: "{{path.basename}}"
 
     spec:
-
       project: default
 
       source:
-
-        repoURL: https://github.com/YOUR_USERNAME/platform-engineering-bootcamp.git
-
+        repoURL: https://github.com/kosebinu/platform-engineering-bootcamp.git
         targetRevision: main
-
         path: helm/charts/application-template
 
+        helm:
+          valueFiles:
+            - "../../gitops/applications/{{path.basename}}/values-dev.yaml"
+
       destination:
-
         server: https://kubernetes.default.svc
-
-        namespace: "{{namespace}}"
+        namespace: "{{path.basename}}"
 
       syncPolicy:
-
         automated:
-
           prune: true
-
           selfHeal: true
