@@ -1,0 +1,19 @@
+application:
+  name: orders
+  team: orders
+  environment: dev
+
+replicaCount: 1
+
+image:
+  repository: company.azurecr.io/orders
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
