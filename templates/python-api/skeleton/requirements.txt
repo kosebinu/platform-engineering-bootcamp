@@ -1,0 +1,18 @@
+# =============================================================================
+# Python API Template Dependencies
+# Internal Developer Platform (IDP)
+# =============================================================================
+
+# Web Framework
+fastapi
+
+# ASGI Server
+uvicorn[standard]
+
+# Testing
+pytest
+httpx
+
+# Optional Development Dependencies
+pytest-cov
+

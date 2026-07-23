@@ -1,0 +1,139 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+
+metadata:
+  name: python-api
+  title: Python API
+  description: Creates a production-ready Python API with CI/CD, Helm, and catalog registration.
+  tags:
+    - python
+    - api
+    - kubernetes
+    - github
+    - golden-path
+
+spec:
+  owner: group:default/platform-team
+  type: service
+
+  parameters:
+    - title: Service Information
+      required:
+        - name
+        - description
+        - owner
+        - system
+
+      properties:
+        name:
+          title: Service Name
+          type: string
+          description: Unique kebab-case name for the service.
+          pattern: "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+          maxLength: 50
+          ui:autofocus: true
+          ui:help: Use lowercase letters, numbers, and hyphens.
+
+        description:
+          title: Description
+          type: string
+          description: Briefly describe the service.
+          maxLength: 200
+          ui:widget: textarea
+          ui:options:
+            rows: 4
+
+        owner:
+          title: Owner
+          type: string
+          description: Team responsible for this service.
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind:
+                - Group
+
+        system:
+          title: System
+          type: string
+          description: Business or technical system containing this service.
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind:
+                - System
+            defaultKind: System
+            defaultNamespace: default
+
+        lifecycle:
+          title: Lifecycle
+          type: string
+          description: Current maturity level of the service.
+          default: experimental
+          enum:
+            - experimental
+            - development
+            - production
+          enumNames:
+            - Experimental
+            - Development
+            - Production
+
+    - title: Repository Information
+      required:
+        - repoUrl
+
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          description: GitHub organization and repository name.
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+            allowedOwners:
+              - rohajshop
+
+  steps:
+    - id: fetch
+      name: Render service skeleton
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          lifecycle: ${{ parameters.lifecycle }}
+          destination: ${{ parameters.repoUrl | parseRepoUrl }}
+
+    - id: publish
+      name: Create GitHub repository
+      action: publish:github
+      input:
+        repoUrl: ${{ parameters.repoUrl }}
+        description: ${{ parameters.description }}
+        defaultBranch: main
+        repoVisibility: internal
+        protectDefaultBranch: true
+        requireCodeOwnerReviews: true
+        requiredApprovingReviewCount: 1
+        sourcePath: .
+
+    - id: register
+      name: Register service in catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  output:
+    links:
+      - title: GitHub Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+
+      - title: Open in Software Catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}

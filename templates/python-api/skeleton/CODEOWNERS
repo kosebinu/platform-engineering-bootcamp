@@ -1,0 +1,11 @@
+# Default ownership
+* @kosebinu
+
+# Application source
+/src/ @kosebinu
+
+# Deployment configuration
+/helm/ @kosebinu
+
+# CI/CD configuration
+/.github/workflows/ @kosebinu

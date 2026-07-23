@@ -1,0 +1,26 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+
+metadata:
+  name: ${{ values.name }}
+  title: ${{ values.name }}
+  description: ${{ values.description }}
+
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+
+  tags:
+    - python
+    - api
+    - kubernetes
+
+  links:
+    - url: https://github.com/${{ values.destination.owner }}/${{ values.destination.repo }}
+      title: GitHub Repository
+      icon: github
+
+spec:
+  type: service
+  lifecycle: ${{ values.lifecycle }}
+  owner: ${{ values.owner }}
+  system: ${{ values.system }}
